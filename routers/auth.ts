@@ -8,7 +8,10 @@ router.post("/initiate_login", async (req, res) => {
     try {
         const {success, data} = initialLoginSchema.safeParse(req.body);
         if(!success) {
-            res.status(411).send("Invalid Input");
+            res.status(411).json({
+                message : "Invalid Inputs",
+                success : false,
+            });
             return;
         }
     

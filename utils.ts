@@ -7,8 +7,8 @@ const OTP_VALIDITY_TIME = 60 * 5; // 5 minutes
 
 export const generateOTP = (userPhoneNumber: string) => {
 
-  const token= base32.encode(userPhoneNumber + process.env.JWT_SECRET!);
-  const { otp } = TOTP.generate(token, {period : OTP_VALIDITY_TIME});
+  const totpKey = base32.encode(userPhoneNumber + process.env.JWT_SECRET!);
+  const { otp } = TOTP.generate(totpKey, {period : OTP_VALIDITY_TIME});
   return otp;
 };
 
