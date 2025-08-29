@@ -2,14 +2,14 @@ import { TOTP } from "totp-generator";
 import twilio from "twilio";
 import base32 from 'hi-base32'
 import { db } from "./db";
+import { OTP_EXPIRATION_TIME } from "./constants";
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
-const OTP_VALIDITY_TIME = 60 * 5; // 5 minutes
 
 export const generateOTP = (userPhoneNumber: string) => {
 
   const totpKey = base32.encode(userPhoneNumber + process.env.JWT_SECRET!);
-  const { otp } = TOTP.generate(totpKey, {period : OTP_VALIDITY_TIME});
+  const { otp } = TOTP.generate(totpKey, {period : OTP_EXPIRATION_TIME});
   return otp;
 };
 
