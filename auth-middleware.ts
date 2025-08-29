@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 
 export const authMiddleware = (req : Request, res : Response, next : NextFunction) => {
     const authToken = req.headers.authorization?.split(" ")[1];
@@ -10,9 +10,17 @@ export const authMiddleware = (req : Request, res : Response, next : NextFunctio
         })
         return;
     }
-    const data = jwt.verify(authToken, process.env.JWT_SECRET!);
+    try{
+        const data = jwt.verify(authToken, process.env.JWT_SECRET!);
+        req.userId = (data as unknown as JwtPayload).userId as string;
 
-    console.log(data);
-
-    next();
+        next();
+    }catch(err){
+        res.status(411).json({
+            message: "Auth token is invalid",
+            success: false
+        });
+        return;
+    }
+   
 }

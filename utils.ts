@@ -20,7 +20,7 @@ export const sendOTP = async(userPhoneNumber: string, otp: string) => {
         // Only indian Phone numbers
         to: `+91${userPhoneNumber}`,
     });
-    console.log(message);
+    debugValue(message, "Twilio Message");
 };
 
 export const checkReferralCode = async (referralCode: string) => {

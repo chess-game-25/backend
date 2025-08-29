@@ -1,5 +1,6 @@
 import express from "express";
 import authRouter from "./routers/auth";
+import { debugValue } from "./utils";
 
 const PORT = 3000;
 const app = express();
@@ -9,5 +10,5 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  debugValue(`Server is running on port ${PORT}`, "Server Startup");
 });

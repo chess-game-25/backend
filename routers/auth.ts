@@ -3,6 +3,7 @@ import { initialLoginSchema, loginSchema } from "../types";
 import jwt from "jsonwebtoken";
 import { checkReferralCode, debugValue, generateOTP, sendOTP } from "../utils";
 import { db } from "../db";
+import { de } from "zod/locales";
 const router = Router();
 
 router.post("/initiate_login", async (req, res) => {
@@ -22,7 +23,7 @@ router.post("/initiate_login", async (req, res) => {
         if(process.env.NODE_ENV !== "development") {
             await sendOTP(phoneNumber, otp);
         } else {
-            console.log(otp);
+            debugValue(otp, "Generated OTP");
         }
     
         res.status(200).json({
@@ -30,7 +31,6 @@ router.post("/initiate_login", async (req, res) => {
             success: true,
         });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             message: "Internal Server Error",
             success: false,
