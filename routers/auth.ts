@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { initialLoginSchema, loginSchema } from "../types";
 import jwt from "jsonwebtoken";
-import { generateOTP, sendOTP } from "../utils";
+import { checkReferralCode, debugValue, generateOTP, sendOTP } from "../utils";
+import { db } from "../db";
 const router = Router();
 
 router.post("/initiate_login", async (req, res) => {
@@ -51,20 +52,87 @@ router.post("/login", async (req, res) => {
         const {phoneNumber, otp} = data;
         const generatedOTP = generateOTP(phoneNumber);
         if(otp !== generatedOTP){
-            console.log(otp, generatedOTP);
             res.status(411).json({
                 message: "Invalid OTP",
                 success: false,
             });
             return;
         }
-        
-        const userId = "demo"
-        const token = jwt.sign(userId, process.env.JWT_SECRET!); 
-        res.status(200).json({
-            token: token,
-            success: true,
+
+        // valid OTP
+
+        const user = await db.user.findFirst({
+            where : { phoneNumber: phoneNumber }
         })
+
+        if(user != null){
+            const userId = user.id;
+            const token = jwt.sign(userId, process.env.JWT_SECRET!); 
+            res.status(200).json({
+                token: token,
+                success: true,
+            });
+            debugValue(user, "Existing User Login");
+            return;
+        }
+
+        const isValidReferral = await checkReferralCode(data.referralCode || "");
+        const referrer = await db.user.findFirst({
+            where: { referralCode: data.referralCode }
+        });
+        
+        if(isValidReferral && referrer) {
+                await db.$transaction([
+                    db.user.update({
+                        where: { id: referrer.id },
+                        data: { coins: { increment: 10 } }
+                    }),
+                    db.user.create({
+                        data: {
+                            phoneNumber: phoneNumber,
+                            username: "User" + Math.floor(Math.random() * 10000),
+                            referralCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
+                            coins: 0,
+                            referredById: referrer.id,
+                        }
+                    })
+                ]);
+                
+                const newUser = await db.user.findFirst({
+                    where: { phoneNumber: phoneNumber }
+                });
+                debugValue(newUser, "New User using Referral Code");
+                if(newUser == null) {
+                    res.status(500).json({
+                        message: "Internal Server Error",
+                        success: false,
+                    });
+                    return;
+                }
+
+                const token = jwt.sign(newUser.id, process.env.JWT_SECRET!);
+                res.status(200).json({
+                    token: token,
+                    success: true,
+                })
+                return;
+        }else {
+            const user = await db.user.create({
+                data: {
+                    phoneNumber: phoneNumber,
+                    username: "User" + Math.floor(Math.random() * 10000),
+                    referralCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
+                    coins: 0,
+                }
+            });
+            debugValue(user, "New User without Referral Code");
+            const token = jwt.sign(user.id, process.env.JWT_SECRET!);
+            res.status(200).json({
+                token: token,
+                success: true,
+            });
+            return;
+        }
     } catch (error) {
         res.status(500).json({
             message: "Internal Server Error",

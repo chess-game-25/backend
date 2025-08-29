@@ -1,6 +1,7 @@
 import { TOTP } from "totp-generator";
 import twilio from "twilio";
 import base32 from 'hi-base32'
+import { db } from "./db";
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
 const OTP_VALIDITY_TIME = 60 * 5; // 5 minutes
@@ -20,4 +21,20 @@ export const sendOTP = async(userPhoneNumber: string, otp: string) => {
         to: `+91${userPhoneNumber}`,
     });
     console.log(message);
+};
+
+export const checkReferralCode = async (referralCode: string) => {
+  const user = await db.user.findFirst({
+    where:{
+      referralCode: referralCode
+    }
+  })
+  if(user !== null) return true;
+  return false;
+}
+
+export const debugValue = (value: any, label: string) => {
+  if (process.env.NODE_ENV === "development") {
+    console.log(`${label}:`, value);
+  }
 };
