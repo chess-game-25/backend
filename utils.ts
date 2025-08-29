@@ -1,7 +1,7 @@
 import { TOTP } from "totp-generator";
 import twilio from "twilio";
 import base32 from 'hi-base32'
-import { db } from "./db";
+import { db } from "./db/index";
 import { OTP_EXPIRATION_TIME } from "./constants";
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);

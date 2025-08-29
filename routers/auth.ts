@@ -2,8 +2,7 @@ import { Router } from "express";
 import { initialLoginSchema, loginSchema } from "../types";
 import jwt from "jsonwebtoken";
 import { checkReferralCode, debugValue, generateOTP, sendOTP } from "../utils";
-import { db } from "../db";
-import { de } from "zod/locales";
+import { db } from "../db/index";
 const router = Router();
 
 router.post("/initiate_login", async (req, res) => {
