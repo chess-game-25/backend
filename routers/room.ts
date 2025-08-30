@@ -7,9 +7,30 @@ import { debugValue } from "../utils";
 const router = Router();
 
 router.post("/create", authMiddleware, async (req, res) => {
-    // TODO: User cant create multiple games 
     try{
     const {userId} = req;
+        const currGames = await db.game.count({
+            where:{
+                OR:[
+                    {
+                        whitePlayerId: userId,
+                        status: GameStatus.IN_PROGRESS
+                    },
+                    {
+                        blackPlayerId: userId,
+                        status: GameStatus.IN_PROGRESS
+                    },
+                ]
+                
+            }
+        })
+        if(currGames > 0){
+            res.status(409).json({
+                message: "User already has an active game",
+                success: false
+            })
+            return;
+        }
         const game = await db.game.create({
             data:{
             whitePlayerId: userId,
