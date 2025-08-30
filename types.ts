@@ -14,5 +14,8 @@ export const checkReferralSchema = z.object({
   referralCode: z.string().min(6).max(6),
 });
 
+export const WHITE_PLAYER = "white";
+export const BLACK_PLAYER = "black";
+
 export type InitialLoginSchema = z.infer<typeof initialLoginSchema>;
 export type LoginSchema = z.infer<typeof loginSchema>;

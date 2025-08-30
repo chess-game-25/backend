@@ -3,7 +3,7 @@ import { checkReferralSchema } from "../types";
 import { checkReferralCode } from "../utils";
 const router = Router();
 
-router.post('/check_referral', async(req, res) => {
+router.post('/isValid', async(req, res) => {
     // TODO: Rate limit this endpoint
     try {
         const { success, data } = checkReferralSchema.safeParse(req.body);
