@@ -140,6 +140,7 @@ router.post("/login", async (req, res) => {
             return;
         }
     } catch (error) {
+        debugValue(error, "Internal Server Error @ /api/auth/login");
         res.status(500).json({
             message: "Internal Server Error",
             success: false,
