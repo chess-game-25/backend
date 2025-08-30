@@ -5,7 +5,7 @@ import referralRouter from "./routers/referral";
 
 import { debugValue } from "./utils";
 
-const PORT = 3000;
+const PORT = process.env.PORT ?? 8000;
 const app = express();
 
 app.use(express.json());

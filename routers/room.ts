@@ -18,10 +18,13 @@ router.post("/create", authMiddleware, async (req, res) => {
                     },
                     {
                         blackPlayerId: userId,
-                        status: GameStatus.IN_PROGRESS
+                        status: GameStatus.IN_PROGRESS 
+                    },
+                    {
+                        whitePlayerId: userId,
+                        status: GameStatus.WAITING_FOR_PLAYERS
                     },
                 ]
-                
             }
         })
         if(currGames > 0){
@@ -35,7 +38,7 @@ router.post("/create", authMiddleware, async (req, res) => {
             data:{
             whitePlayerId: userId,
             blackPlayerId: null,
-            status: GameStatus.IN_PROGRESS,
+            status: GameStatus.WAITING_FOR_PLAYERS,
         }})
         res.status(200).json({
             roomId: game.id,

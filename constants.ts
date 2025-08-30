@@ -1,1 +1,1 @@
-export const OTP_EXPIRATION_TIME = 5 * 60 ; // 5 minutes in Seconds
+export const OTP_EXPIRATION_TIME = 15 * 60 ; // 15 minutes in Seconds
