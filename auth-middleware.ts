@@ -11,7 +11,6 @@ export const authMiddleware = (req : Request, res : Response, next : NextFunctio
         return;
     }
     try{
-        // TODO: Add Rating to JWT
         const data = jwt.verify(authToken, process.env.JWT_SECRET!);
         req.userId = (data as unknown as JwtPayload).userId as string;
         req.username = (data as unknown as JwtPayload).username as string;

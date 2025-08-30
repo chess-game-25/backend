@@ -67,7 +67,8 @@ router.post("/login", async (req, res) => {
         if(user != null){
             const userId = user.id;
             const username = user.username;
-            const token = jwt.sign({userId, username}, process.env.JWT_SECRET!); 
+            const rating = user.rating;
+            const token = jwt.sign({userId, username, rating}, process.env.JWT_SECRET!); 
             res.status(200).json({
                 token: token,
                 success: true,
@@ -111,7 +112,8 @@ router.post("/login", async (req, res) => {
                 }
                 const userId  = newUser.id;
                 const username = newUser.username;
-                const token = jwt.sign({userId, username}, process.env.JWT_SECRET!);
+                const rating = newUser.rating;
+                const token = jwt.sign({userId, username, rating}, process.env.JWT_SECRET!);
                 res.status(200).json({
                     token: token,
                     success: true,
@@ -129,7 +131,8 @@ router.post("/login", async (req, res) => {
             debugValue(user, "New User without Referral Code");
             const userId = user.id;
             const username = user.username;
-            const token = jwt.sign({userId, username}, process.env.JWT_SECRET!);
+            const rating = user.rating;
+            const token = jwt.sign({userId, username, rating}, process.env.JWT_SECRET!);
             res.status(200).json({
                 token: token,
                 success: true,
