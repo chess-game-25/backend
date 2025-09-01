@@ -13,9 +13,11 @@
     "postinstall": "cp node_modules/chess-prisma-shared/prisma/schema.prisma prisma/schema.prisma && bunx prisma generate"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "chess-prisma-shared": "^1.2.0",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "hi-base32": "^0.5.1",
     "jsonwebtoken": "^9.0.2",
